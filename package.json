@@ -19,7 +19,9 @@
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.7",
+    "embla-carousel": "^8.6.0",
     "es-toolkit": "^1.16.0",
+    "gsap": "^3.13.0",
     "rollup-plugin-esbuild": "^6.1.1",
     "rollup-plugin-livereload": "^2.0.5",
     "rollup-plugin-serve": "^1.1.1"

@@ -9,7 +9,9 @@ import servePlugin from 'rollup-plugin-serve';
 import css from 'rollup-plugin-import-css';
 
 export default defineConfig({
-  input: {},
+  input: {
+    'carousel-morph-animation': './src/features/carousel-morph-animation.ts',
+  },
   output: {
     format: 'module',
     dir: 'dist',
@@ -30,7 +32,7 @@ export default defineConfig({
     esbuildPlugin({ minify: true, target: 'es2020', platform: 'browser' }),
     servePlugin({
       contentBase: 'dist',
-      port: 3000,
+      port: 3002,
       headers: {
         'Access-Control-Allow-Origin': '*',
       },
