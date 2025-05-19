@@ -1,11 +1,10 @@
 import { EmblaNodeElement } from '@/types/embla';
 
 type ChildAnimationElements = {
-  heading: HTMLElement | undefined | null;
   details: HTMLElement | undefined | null;
   price: HTMLElement | undefined | null;
 };
-type ChildAnimationElementsMap = Map<HTMLElement, ChildAnimationElements>;
+type ChildAnimationElementsMap = Map<Number, ChildAnimationElements>;
 
 const init = () => {
   const featuredListingCarouslNodes = Array.from(
@@ -25,28 +24,33 @@ const init = () => {
         return;
       }
 
+      const childElementsAnimationRevealState: gsap.TweenVars = {
+        yPercent: 0,
+        opacity: 1,
+        stagger: 0.25,
+        delay: 0.15,
+        overwrite: true,
+      };
+
+      const childElementsAnimationHiddenState: gsap.TweenVars = {
+        yPercent: -105,
+        opacity: 0.5,
+        overwrite: true,
+      };
+
       for (let i = 0; i < slides.length; i++) {
         const slide = slides[i]!;
         const isCurrentSlide = i === currIndex;
 
-        // const childAnimationElements = childAnimationElementsMap.get(slide)!;
-
-        // console.log(childAnimationElements, 'Child Animation Elements');
+        const childAnimationElements = childAnimationElementsMap.get(i);
+        const childAnimationElementsArr = [
+          childAnimationElements?.details,
+          childAnimationElements?.price,
+        ].filter((el) => el !== undefined && el !== null);
 
         if (isCurrentSlide) {
           gsap.to(slide, { scale: 1, x: 0, ease: 'back', duration: 0.7 });
-          // gsap.fromTo(
-          //   [
-          //     childAnimationElements.heading,
-          //     childAnimationElements.details,
-          //     childAnimationElements.price,
-          //   ],
-          //   { yPercent: -100, opacity: 0 },
-          //   {
-          //     yPercent: 0,
-          //     opacity: 1,
-          //   }
-          // );
+          gsap.to(childAnimationElementsArr, childElementsAnimationRevealState);
         } else {
           const isLeftSide = i < currIndex;
 
@@ -57,35 +61,26 @@ const init = () => {
 
           gsap.to(slide, {
             x: () => {
-              const morphX = Number.parseFloat(
+              const gapAdjustment = Number.parseFloat(
                 getComputedStyle(document.documentElement).getPropertyValue(
-                  '--featured-animation-morph-x-percent'
+                  '--_responsive---featured-listing-carousel--animation-gap-adjustment-percent'
                 )
               );
 
-              return isLeftSide ? `${morphX * positionIndex}%` : `-${morphX * positionIndex}%`;
+              return isLeftSide
+                ? `${gapAdjustment * positionIndex}%`
+                : `-${gapAdjustment * positionIndex}%`;
             },
             scale: () => {
               const scale = getComputedStyle(document.documentElement).getPropertyValue(
-                '--featured-animation-scale'
+                '--_responsive---featured-listing-carousel--inactive-slide-scale-ratio'
               );
               return scale;
             },
             ease: 'back',
             duration: 0.7,
           });
-          // gsap.fromTo(
-          //   [
-          //     childAnimationElements.heading,
-          //     childAnimationElements.details,
-          //     childAnimationElements.price,
-          //   ],
-          //   { yPercent: -100, opacity: 0 },
-          //   {
-          //     yPercent: 0,
-          //     opacity: 1,
-          //   }
-          // );
+          gsap.to(childAnimationElementsArr, childElementsAnimationHiddenState);
         }
       }
     };
@@ -96,22 +91,28 @@ const init = () => {
       slides = carouselApi.slideNodes();
       currentIndex = carouselApi.selectedScrollSnap();
 
-      selectCurrentSlide(currentIndex);
-
-      /*
-      for (const slide of slides) {
-        const heading = slide.querySelector<HTMLElement>('[data-featured-heading]');
+      for (let i = 0; i < slides.length; i++) {
+        const slide = slides[i]!;
         const details = slide.querySelector<HTMLElement>('[data-featured-details]');
         const price = slide.querySelector<HTMLElement>('[data-featured-price]');
 
-        const childAnimationElements: ChildAnimationElements = { heading, details, price };
+        const childAnimationElements: ChildAnimationElements = { details, price };
 
-        childAnimationElementsMap.set(slide, childAnimationElements);
+        childAnimationElementsMap.set(i, childAnimationElements);
       }
-        */
+
+      selectCurrentSlide(currentIndex);
     });
 
     carouselNode.addEventListener('embla:select', (event) => {
+      carouselApi = event.detail.embla;
+
+      currentIndex = carouselApi.selectedScrollSnap();
+
+      selectCurrentSlide(currentIndex);
+    });
+
+    carouselNode.addEventListener('embla:reInit', (event) => {
       carouselApi = event.detail.embla;
 
       currentIndex = carouselApi.selectedScrollSnap();
