@@ -13,13 +13,13 @@ const init = () => {
 
   for (const carouselNode of featuredListingCarouslNodes) {
     let carouselApi = carouselNode.emblaApi;
-    let slides = carouselApi?.slideNodes();
+    let slideCards = Array.from(carouselNode.querySelectorAll<HTMLElement>('[data-carousel-card]'));
     let currentIndex = carouselApi?.selectedScrollSnap();
 
     const childAnimationElementsMap: ChildAnimationElementsMap = new Map();
 
     const selectCurrentSlide = (currIndex: number) => {
-      if (slides === undefined) {
+      if (slideCards === undefined) {
         console.debug('selectCurrentSlide was used before carousel was initialized');
         return;
       }
@@ -38,8 +38,8 @@ const init = () => {
         overwrite: true,
       };
 
-      for (let i = 0; i < slides.length; i++) {
-        const slide = slides[i]!;
+      for (let i = 0; i < slideCards.length; i++) {
+        const slideCard = slideCards[i]!;
         const isCurrentSlide = i === currIndex;
 
         const childAnimationElements = childAnimationElementsMap.get(i);
@@ -49,7 +49,7 @@ const init = () => {
         ].filter((el) => el !== undefined && el !== null);
 
         if (isCurrentSlide) {
-          gsap.to(slide, { scale: 1, x: 0, ease: 'back', duration: 0.7 });
+          gsap.to(slideCard, { scale: 1, x: 0, ease: 'back', duration: 0.7 });
           gsap.to(childAnimationElementsArr, childElementsAnimationRevealState);
         } else {
           const isLeftSide = i < currIndex;
@@ -57,9 +57,9 @@ const init = () => {
           const positionIndex = isLeftSide ? currIndex - i - 1 : i - currIndex - 1;
 
           const transformAlign = isLeftSide ? 'right' : 'left';
-          slide.style.transformOrigin = `${transformAlign} center`;
+          slideCard.style.transformOrigin = `${transformAlign} center`;
 
-          gsap.to(slide, {
+          gsap.to(slideCard, {
             x: () => {
               const gapAdjustment = Number.parseFloat(
                 getComputedStyle(document.documentElement).getPropertyValue(
@@ -88,13 +88,13 @@ const init = () => {
     carouselNode.addEventListener('embla:init', (event) => {
       carouselApi = event.detail.embla;
 
-      slides = carouselApi.slideNodes();
+      slideCards = Array.from(carouselNode.querySelectorAll<HTMLElement>('[data-carousel-card]'));
       currentIndex = carouselApi.selectedScrollSnap();
 
-      for (let i = 0; i < slides.length; i++) {
-        const slide = slides[i]!;
-        const details = slide.querySelector<HTMLElement>('[data-featured-details]');
-        const price = slide.querySelector<HTMLElement>('[data-featured-price]');
+      for (let i = 0; i < slideCards.length; i++) {
+        const slideCard = slideCards[i]!;
+        const details = slideCard.querySelector<HTMLElement>('[data-featured-details]');
+        const price = slideCard.querySelector<HTMLElement>('[data-featured-price]');
 
         const childAnimationElements: ChildAnimationElements = { details, price };
 
