@@ -123,3 +123,5 @@ const init = () => {
 };
 
 init();
+
+console.log('lo2');
