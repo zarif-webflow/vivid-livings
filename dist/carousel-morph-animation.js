@@ -37,7 +37,7 @@ const init = () => {
           const isLeftSide = i < currIndex;
           const positionIndex = isLeftSide ? currIndex - i - 1 : i - currIndex - 1;
           const transformAlign = isLeftSide ? "right" : "left";
-          slideCard.style.transformOrigin = `${transformAlign} center`;
+          slideCard.style.transformOrigin = `${transformAlign} top`;
           gsap.to(slideCard, {
             x: () => {
               const gapAdjustment = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--_responsive---featured-listing-carousel--animation-gap-adjustment-percent"));
@@ -80,4 +80,3 @@ const init = () => {
   }
 };
 init();
-console.log("lo2");

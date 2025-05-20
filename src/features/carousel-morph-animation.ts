@@ -57,7 +57,7 @@ const init = () => {
           const positionIndex = isLeftSide ? currIndex - i - 1 : i - currIndex - 1;
 
           const transformAlign = isLeftSide ? 'right' : 'left';
-          slideCard.style.transformOrigin = `${transformAlign} center`;
+          slideCard.style.transformOrigin = `${transformAlign} top`;
 
           gsap.to(slideCard, {
             x: () => {
@@ -123,5 +123,3 @@ const init = () => {
 };
 
 init();
-
-console.log('lo2');

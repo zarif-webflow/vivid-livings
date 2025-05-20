@@ -1,4 +1,4 @@
-import { defineConfig, InputOption, ModuleFormat } from 'rollup';
+import { defineConfig } from 'rollup';
 import cjsPlugin from '@rollup/plugin-commonjs';
 import reslovePlugin from '@rollup/plugin-node-resolve';
 import replacePlugin from '@rollup/plugin-replace';
