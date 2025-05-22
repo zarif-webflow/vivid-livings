@@ -11,7 +11,7 @@ import css from 'rollup-plugin-import-css';
 const input = {
   'carousel-morph-animation': './src/features/carousel-morph-animation.ts',
   'offplan-modal-form-populate': './src/features/offplan-modal-form-populate.ts',
-  'display-property-search': './src/features/display-property-search.ts',
+  'property-location-search': './src/features/property-location-search.ts',
 };
 const outputFormat = 'module';
 

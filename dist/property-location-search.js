@@ -2156,4 +2156,28 @@ const init = () => {
     setupCombobox(input, []);
   }
 };
+const initFinsweetCmsApi = () => {
+  window.FinsweetAttributes || (window.FinsweetAttributes = []);
+  window.FinsweetAttributes.push([
+    "list",
+    (listInstances) => {
+      for (const listInstance of listInstances) {
+        if (listInstance.instance === "property-location-search") {
+          listInstance.items.value;
+          listInstance.addHook("start", (items) => {
+            console.log(items, "Start Hook Props");
+            return items;
+          });
+          console.log(listInstance);
+          listInstance.addHook("filter", (items) => {
+            console.log(listInstance.filters, "Applied Filters");
+            console.log(items, "End Hook Props");
+            return items;
+          });
+        }
+      }
+    }
+  ]);
+};
 init();
+initFinsweetCmsApi();
