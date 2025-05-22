@@ -3,7 +3,8 @@ const SELECTORS = {
   searchWrapper: "[data-display-property-element=search-wrapper]",
   searchResultContainer: "[data-display-property-element=search-result-cont]",
   searchResultList: "[data-display-property-element=search-result-list]",
-  searchResultItem: "[data-display-property-element=search-result-item]"
+  searchResultItem: "[data-display-property-element=search-result-item]",
+  searchResultItemValue: "[data-display-property-element=search-result-item-value]"
 };
 const init = () => {
   const searchInputs = Array.from(document.querySelectorAll(SELECTORS.searchInput));
@@ -23,6 +24,22 @@ const init = () => {
       console.log("Result item wasnt found for", searchInput);
       continue;
     }
+    const modalFragment = document.createDocumentFragment();
+    const optionListId = resultList.id || "prop-search";
+    modalFragment.appendChild(resultContainer);
+    resultContainer.dataset.initialized = "true";
+    const setupInitialAttributes = () => {
+      searchInput.type = "search";
+      searchInput.ariaAutoComplete = "both";
+      searchInput.setAttribute("autocomplete", "off");
+      searchInput.setAttribute("autocorrect", "off");
+      searchInput.setAttribute("autocapitalize", "off");
+      searchInput.setAttribute("spellcheck", "false");
+      searchInput.setAttribute("aria-controls", optionListId);
+      resultList.role = "listbox";
+      resultList.id = optionListId;
+    };
+    setupInitialAttributes();
   }
 };
 init();
