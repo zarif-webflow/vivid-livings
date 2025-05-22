@@ -1,1 +1,82 @@
-const v=()=>{const S=Array.from(document.querySelectorAll("[data-carousel-parent][data-featured-listing]"));for(const r of S){let a=r.emblaApi,l=Array.from(r.querySelectorAll("[data-carousel-card]")),o=a?.selectedScrollSnap();const p=new Map,d=e=>{if(l===void 0){console.debug("selectCurrentSlide was used before carousel was initialized");return}const s={yPercent:0,opacity:1,stagger:.25,delay:.15,overwrite:!0},i={yPercent:-105,opacity:.5,overwrite:!0};for(let t=0;t<l.length;t++){const n=l[t],u=t===e,m=p.get(t),g=[m?.details,m?.price].filter(c=>c!=null);if(u)gsap.to(n,{scale:1,x:0,ease:"back",duration:.7}),gsap.to(g,s);else{const c=t<e,f=c?e-t-1:t-e-1,b=c?"right":"left";n.style.transformOrigin=`${b} top`,gsap.to(n,{x:()=>{const y=Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--_responsive---featured-listing-carousel--animation-gap-adjustment-percent"));return c?`${y*f}%`:`-${y*f}%`},scale:()=>getComputedStyle(document.documentElement).getPropertyValue("--_responsive---featured-listing-carousel--inactive-slide-scale-ratio"),ease:"back",duration:.7}),gsap.to(g,i)}}};r.addEventListener("embla:init",e=>{a=e.detail.embla,l=Array.from(r.querySelectorAll("[data-carousel-card]")),o=a.selectedScrollSnap();for(let s=0;s<l.length;s++){const i=l[s],t=i.querySelector("[data-featured-details]"),n=i.querySelector("[data-featured-price]"),u={details:t,price:n};p.set(s,u)}d(o)}),r.addEventListener("embla:select",e=>{a=e.detail.embla,o=a.selectedScrollSnap(),d(o)}),r.addEventListener("embla:reInit",e=>{a=e.detail.embla,o=a.selectedScrollSnap(),d(o)})}};v();
+const init = () => {
+  const featuredListingCarouslNodes = Array.from(document.querySelectorAll("[data-carousel-parent][data-featured-listing]"));
+  for (const carouselNode of featuredListingCarouslNodes) {
+    let carouselApi = carouselNode.emblaApi;
+    let slideCards = Array.from(carouselNode.querySelectorAll("[data-carousel-card]"));
+    let currentIndex = carouselApi?.selectedScrollSnap();
+    const childAnimationElementsMap = /* @__PURE__ */ new Map();
+    const selectCurrentSlide = (currIndex) => {
+      if (slideCards === void 0) {
+        console.debug("selectCurrentSlide was used before carousel was initialized");
+        return;
+      }
+      const childElementsAnimationRevealState = {
+        yPercent: 0,
+        opacity: 1,
+        stagger: 0.25,
+        delay: 0.15,
+        overwrite: true
+      };
+      const childElementsAnimationHiddenState = {
+        yPercent: -105,
+        opacity: 0.5,
+        overwrite: true
+      };
+      for (let i = 0; i < slideCards.length; i++) {
+        const slideCard = slideCards[i];
+        const isCurrentSlide = i === currIndex;
+        const childAnimationElements = childAnimationElementsMap.get(i);
+        const childAnimationElementsArr = [
+          childAnimationElements?.details,
+          childAnimationElements?.price
+        ].filter((el) => el !== void 0 && el !== null);
+        if (isCurrentSlide) {
+          gsap.to(slideCard, { scale: 1, x: 0, ease: "back", duration: 0.7 });
+          gsap.to(childAnimationElementsArr, childElementsAnimationRevealState);
+        } else {
+          const isLeftSide = i < currIndex;
+          const positionIndex = isLeftSide ? currIndex - i - 1 : i - currIndex - 1;
+          const transformAlign = isLeftSide ? "right" : "left";
+          slideCard.style.transformOrigin = `${transformAlign} top`;
+          gsap.to(slideCard, {
+            x: () => {
+              const gapAdjustment = Number.parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--_responsive---featured-listing-carousel--animation-gap-adjustment-percent"));
+              return isLeftSide ? `${gapAdjustment * positionIndex}%` : `-${gapAdjustment * positionIndex}%`;
+            },
+            scale: () => {
+              const scale = getComputedStyle(document.documentElement).getPropertyValue("--_responsive---featured-listing-carousel--inactive-slide-scale-ratio");
+              return scale;
+            },
+            ease: "back",
+            duration: 0.7
+          });
+          gsap.to(childAnimationElementsArr, childElementsAnimationHiddenState);
+        }
+      }
+    };
+    carouselNode.addEventListener("embla:init", (event) => {
+      carouselApi = event.detail.embla;
+      slideCards = Array.from(carouselNode.querySelectorAll("[data-carousel-card]"));
+      currentIndex = carouselApi.selectedScrollSnap();
+      for (let i = 0; i < slideCards.length; i++) {
+        const slideCard = slideCards[i];
+        const details = slideCard.querySelector("[data-featured-details]");
+        const price = slideCard.querySelector("[data-featured-price]");
+        const childAnimationElements = { details, price };
+        childAnimationElementsMap.set(i, childAnimationElements);
+      }
+      selectCurrentSlide(currentIndex);
+    });
+    carouselNode.addEventListener("embla:select", (event) => {
+      carouselApi = event.detail.embla;
+      currentIndex = carouselApi.selectedScrollSnap();
+      selectCurrentSlide(currentIndex);
+    });
+    carouselNode.addEventListener("embla:reInit", (event) => {
+      carouselApi = event.detail.embla;
+      currentIndex = carouselApi.selectedScrollSnap();
+      selectCurrentSlide(currentIndex);
+    });
+  }
+};
+init();
