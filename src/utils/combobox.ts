@@ -13,7 +13,10 @@ const SELECTORS = {
 
 const focusedClassName = 'is--focused';
 
-export const setupCombobox = (comboboxInput: HTMLInputElement) => {
+export const setupCombobox = (
+  comboboxInput: HTMLComboboxInputElement,
+  initialResults: string[] = []
+) => {
   const id = comboboxInput.id;
 
   if (!id) {
@@ -134,6 +137,19 @@ export const setupCombobox = (comboboxInput: HTMLInputElement) => {
 
     comboboxInput.value = text;
     comboboxInput.focus();
+
+    // Dispatch the combobox-select event after selection is complete
+    comboboxInput.dispatchEvent(
+      new CustomEvent('combobox-select', {
+        bubbles: true,
+        detail: {
+          api: comboboxApi,
+          selectedItem: selectedItem,
+          selectedIndex: index,
+          selectedValue: text,
+        },
+      })
+    );
   };
 
   const closeResultModal = () => {
@@ -218,11 +234,11 @@ export const setupCombobox = (comboboxInput: HTMLInputElement) => {
     });
   };
 
-  const renderResults = (addresses: string[]) => {
+  const renderResults = (results: string[]) => {
     resultList.innerHTML = '';
     setHighlightedIndex(0);
 
-    if (addresses.length === 0) {
+    if (results.length === 0) {
       setResultItems([]);
       return;
     }
@@ -230,7 +246,7 @@ export const setupCombobox = (comboboxInput: HTMLInputElement) => {
     const resultItems: HTMLLIElement[] = [];
     const fragment = document.createDocumentFragment();
 
-    for (let i = 0; i < addresses.length; i++) {
+    for (let i = 0; i < results.length; i++) {
       const listItem = resultItem.cloneNode(true) as HTMLLIElement;
 
       const textElement = listItem.querySelector<HTMLElement>(SELECTORS.resultItemValue);
@@ -240,7 +256,7 @@ export const setupCombobox = (comboboxInput: HTMLInputElement) => {
         return;
       }
 
-      textElement.textContent = addresses[i]!;
+      textElement.textContent = results[i]!;
       textElement.dataset.index = i.toString();
 
       if (i === 0) {
@@ -258,4 +274,25 @@ export const setupCombobox = (comboboxInput: HTMLInputElement) => {
   };
 
   setupInitialAttributes();
+  renderResults(initialResults);
+
+  const comboboxApi = {
+    openResultModal,
+    closeResultModal,
+    renderResults,
+    selectResultItem,
+  };
+
+  // Attach API to the input element
+  comboboxInput.comboboxApi = comboboxApi;
+
+  // Dispatch initialization event
+  comboboxInput.dispatchEvent(
+    new CustomEvent('combobox-init', {
+      bubbles: true,
+      detail: { api: comboboxApi },
+    })
+  );
+
+  return comboboxApi;
 };

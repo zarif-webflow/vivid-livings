@@ -15,7 +15,8 @@ const init = () => {
   );
 
   for (const input of comboboxInputs) {
-    setupCombobox(input);
+    const api = setupCombobox(input as HTMLComboboxInputElement, ['Result 1', 'Hello', 'Result 3']);
+    api?.openResultModal();
   }
 };
 
