@@ -10,6 +10,7 @@ import css from 'rollup-plugin-import-css';
 
 const input = {
   'carousel-morph-animation': './src/features/carousel-morph-animation.ts',
+  'offplan-modal-form-populate': './src/features/offplan-modal-form-populate.ts',
 };
 const outputFormat = 'module';
 
