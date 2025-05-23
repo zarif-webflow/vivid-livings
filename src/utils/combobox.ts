@@ -13,10 +13,7 @@ const SELECTORS = {
 
 const focusedClassName = 'is--focused';
 
-export const setupCombobox = (
-  comboboxInput: HTMLComboboxInputElement,
-  initialResults: string[] = []
-) => {
+const setupCombobox = (comboboxInput: HTMLComboboxInputElement, initialResults: string[] = []) => {
   const id = comboboxInput.id;
 
   if (!id) {
@@ -196,7 +193,7 @@ export const setupCombobox = (
     }
 
     keyboardNavigationCallback = (e: KeyboardEvent) => {
-      if (e.key === 'Enter' || e.key === ' ') {
+      if (e.key === 'Enter') {
         e.preventDefault();
         comboboxInput.blur();
         selectResultItem(highlightedIndex);
@@ -296,3 +293,5 @@ export const setupCombobox = (
 
   return comboboxApi;
 };
+
+export { setupCombobox, SELECTORS };

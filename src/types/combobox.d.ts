@@ -46,7 +46,7 @@ declare global {
    * extending the standard HTMLInputElement
    */
   interface HTMLComboboxInputElement extends HTMLInputElement {
-    comboboxApi: ComboboxAPI;
+    comboboxApi?: ComboboxAPI;
   }
 
   /**
