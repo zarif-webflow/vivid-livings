@@ -1,52 +1,107 @@
-import { setupCombobox } from '@/utils/combobox';
+import {
+  generateSearchQueryParams,
+  getAllFieldsValues,
+  getAppliedFilters,
+} from '@/utils/finsweet-list-helpers';
+import { SELECTORS as ComboboxSelectors } from '@/utils/combobox';
+import { debounce } from 'es-toolkit';
+import { ListFilterCondition } from '@/types/finsweet-attributes-list';
 
 const SELECTORS = {
-  comboboxInput: '[data-input-combobox=input]',
-  comboboxWrapper: '[data-input-combobox=wrapper]',
-  resultContainer: '[data-input-combobox=result-container]',
-  resultList: '[data-input-combobox=result-list]',
-  resultItem: '[data-input-combobox=result-item]',
-  resultItemValue: '[data-input-combobox=result-item-value]',
+  locationSearchInput: `input[fs-list-field=name-with-location]${ComboboxSelectors.comboboxInput}`,
+  searchButton: '[fs-list-instance=property-location-search] form button[data-search-button=true]',
 };
+const INSTANCE_NAME = 'property-location-search';
 
 const init = () => {
-  const comboboxInputs = Array.from(
-    document.querySelectorAll<HTMLInputElement>(SELECTORS.comboboxInput)
+  const locationSearchInput = document.querySelector<HTMLComboboxInputElement>(
+    SELECTORS.locationSearchInput
   );
 
-  for (const input of comboboxInputs) {
-    const api = setupCombobox(input as HTMLComboboxInputElement, []);
-    // api?.openResultModal();
+  if (!locationSearchInput) {
+    console.error('Location search input not found', SELECTORS.locationSearchInput);
+    return;
   }
-};
 
-const initFinsweetCmsApi = () => {
+  const searchButton = document.querySelector<HTMLButtonElement>(SELECTORS.searchButton);
+
+  if (!searchButton) {
+    console.error('Search button not found', SELECTORS.searchButton);
+    return;
+  }
+
+  let searchParamsPrefix = locationSearchInput.getAttribute('data-search-params-prefix');
+  if (!searchParamsPrefix) {
+    console.warn('Search params prefix not found, using default value');
+    searchParamsPrefix = '';
+  }
+
+  let comboboxApi = locationSearchInput.comboboxApi;
+  let comboboxResults: string[] = [];
+  let listFilterConditions: ListFilterCondition[] = [];
+
+  locationSearchInput.addEventListener('combobox-init', (event) => {
+    comboboxApi = event.detail.api;
+  });
+
   window.FinsweetAttributes ||= [];
   window.FinsweetAttributes.push([
     'list',
-    (listInstances) => {
-      for (const listInstance of listInstances) {
-        if (listInstance.instance === 'property-location-search') {
-          const values = listInstance.items.value;
+    (instances) => {
+      for (const instance of instances) {
+        if (instance.instance !== INSTANCE_NAME) continue;
 
-          listInstance.addHook('start', (items) => {
-            console.log(items, 'Start Hook Props');
-            return items;
-          });
+        instance.addHook('filter', (items) => {
+          const allFieldValues = getAllFieldsValues(items);
 
-          console.log(listInstance);
+          const newComboboxResults = [];
 
-          listInstance.addHook('filter', (items) => {
-            console.log(listInstance.filters, 'Applied Filters');
-            console.log(items, 'End Hook Props');
-            return items;
-          });
-        }
+          for (const fieldValue of allFieldValues) {
+            const nameWithLocation = fieldValue['name-with-location']?.value;
+            if (typeof nameWithLocation !== 'string') continue;
+            newComboboxResults.push(nameWithLocation);
+          }
+
+          comboboxResults = newComboboxResults;
+
+          const appliedFilters = getAppliedFilters(instance);
+          listFilterConditions = appliedFilters;
+          return items;
+        });
       }
-      // Your code goes here.
     },
   ]);
+
+  const debouncedLocationInputCallback = debounce((value: string, comboboxApi: ComboboxAPI) => {
+    if (!value.trim()) {
+      comboboxApi.renderResults([]);
+      comboboxApi.closeResultModal();
+      return;
+    }
+
+    comboboxApi.renderResults(comboboxResults);
+    comboboxApi.openResultModal();
+  }, 200);
+
+  locationSearchInput.addEventListener('input', () => {
+    if (!comboboxApi) {
+      console.warn('Combobox API not found', locationSearchInput);
+      return;
+    }
+
+    const value: string = locationSearchInput.value;
+
+    debouncedLocationInputCallback(value, comboboxApi);
+  });
+
+  searchButton.addEventListener('click', () => {
+    const query = generateSearchQueryParams(listFilterConditions, searchParamsPrefix);
+    // build full "/buy" URL on the current origin
+    const baseUrl = window.location.origin;
+    const fullUrl = `${baseUrl}/buy${query}`;
+    // navigate to the new URL
+    window.location.href = fullUrl;
+  });
 };
 
 init();
-initFinsweetCmsApi();

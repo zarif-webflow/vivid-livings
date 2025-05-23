@@ -12,6 +12,7 @@ const input = {
   'carousel-morph-animation': './src/features/carousel-morph-animation.ts',
   'offplan-modal-form-populate': './src/features/offplan-modal-form-populate.ts',
   'property-location-search': './src/features/property-location-search.ts',
+  combobox: './src/features/combobox.ts',
 };
 const outputFormat = 'module';
 
