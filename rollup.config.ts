@@ -13,6 +13,7 @@ const input = {
   'offplan-modal-form-populate': './src/features/offplan-modal-form-populate.ts',
   'property-location-search': './src/features/property-location-search.ts',
   combobox: './src/features/combobox.ts',
+  'property-url-copy': './src/features/property-url-copy.ts',
 };
 const outputFormat = 'module';
 
