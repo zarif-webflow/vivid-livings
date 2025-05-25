@@ -5,7 +5,7 @@ const init = () => {
   const modalSelector = '[data-dialog-id=offplan-form]';
   const targetInputSelector = '[data-offplan-element=input]';
   const offplanListSelector = '[data-offplan-element=list]';
-  const offplanModalTriggerSelector = '[data-offplan-element=modal-trigger]';
+  const offplanModalTriggerSelector = '[data-dialog-trigger=offplan-form]';
   const offplanListItemSelector = '[data-offplan-element=list-item]';
   const nameSelector = '[data-offplan-element=name]';
   const locationSelector = '[data-offplan-element=location]';
@@ -35,9 +35,16 @@ const init = () => {
   }
 
   offplanList.addEventListener('click', (event) => {
-    const selectedListItem = (event.target as HTMLElement)
-      .closest<HTMLElement>(offplanModalTriggerSelector)
-      ?.closest<HTMLElement>(offplanListItemSelector);
+    const dialogApi = modal.dialogApi;
+
+    if (dialogApi === undefined) {
+      console.error('Dialog API is not available for the modal.', modal);
+      return;
+    }
+
+    const selectedListItem = (event.target as HTMLElement)?.closest<HTMLElement>(
+      offplanListItemSelector
+    );
 
     if (!selectedListItem) return;
 
@@ -59,6 +66,9 @@ const init = () => {
     const targetInputValue = `${nameValue}, ${locationValue}`;
 
     targetInput.value = targetInputValue;
+
+    dialogApi.open();
+
     targetInput.focus();
   });
 };
