@@ -5,15 +5,14 @@ import {
 } from '@/utils/finsweet-list-helpers';
 import { SELECTORS as ComboboxSelectors } from '@/utils/combobox';
 import { debounce } from 'es-toolkit';
-import { ListFilterCondition } from '@/types/finsweet-attributes-list';
+import { ListFilterCondition, ListInstance } from '@/types/finsweet-attributes-list';
 
-const SELECTORS = {
-  locationSearchInput: `input[fs-list-field=name-with-location]${ComboboxSelectors.comboboxInput}`,
-  searchButton: '[fs-list-instance=property-location-search] form button[data-search-button=true]',
-};
-const INSTANCE_NAME = 'property-location-search';
+const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
+  const SELECTORS = {
+    locationSearchInput: `[fs-list-instance=${fsListInstanceName}] input[fs-list-field=name-with-location]${ComboboxSelectors.comboboxInput}`,
+    searchButton: `[fs-list-instance=${fsListInstanceName}] form button[data-search-button=true]`,
+  };
 
-const init = () => {
   const locationSearchInput = document.querySelector<HTMLComboboxInputElement>(
     SELECTORS.locationSearchInput
   );
@@ -32,13 +31,14 @@ const init = () => {
 
   let searchParamsPrefix = locationSearchInput.getAttribute('data-search-params-prefix');
   if (!searchParamsPrefix) {
-    console.warn('Search params prefix not found, using default value');
+    console.debug('Search params prefix not found, using default value');
     searchParamsPrefix = '';
   }
 
   let comboboxApi = locationSearchInput.comboboxApi;
   let comboboxResults: string[] = [];
   let listFilterConditions: ListFilterCondition[] = [];
+  let listInstance: ListInstance | undefined = undefined;
 
   locationSearchInput.addEventListener('combobox-init', (event) => {
     comboboxApi = event.detail.api;
@@ -49,7 +49,9 @@ const init = () => {
     'list',
     (instances) => {
       for (const instance of instances) {
-        if (instance.instance !== INSTANCE_NAME) continue;
+        if (instance.instance !== fsListInstanceName) continue;
+
+        listInstance = instance;
 
         instance.addHook('filter', (items) => {
           const allFieldValues = getAllFieldsValues(items);
@@ -98,10 +100,29 @@ const init = () => {
     const query = generateSearchQueryParams(listFilterConditions, searchParamsPrefix);
     // build full "/buy" URL on the current origin
     const baseUrl = window.location.origin;
-    const fullUrl = `${baseUrl}/buy${query}`;
+    const fullUrl = `${baseUrl}/${pageSlug}${query}`;
     // navigate to the new URL
     window.location.href = fullUrl;
   });
+
+  locationSearchInput.addEventListener('combobox-select', (event) => {
+    const selectedValue = event.detail.selectedValue;
+
+    const filtersObjectConditions = listInstance?.filters.value.groups[0]?.conditions;
+
+    if (filtersObjectConditions) {
+      for (const condition of filtersObjectConditions) {
+        if (condition.fieldKey === 'name-with-location') {
+          condition.value = selectedValue;
+        }
+      }
+    }
+  });
+};
+
+const init = () => {
+  initLocationSearch('property-location-search', 'buy');
+  initLocationSearch('offplan-location-search', 'off-plan');
 };
 
 init();
