@@ -2,7 +2,7 @@ const init = () => {
   /**
    * All Element Selectors
    */
-  const modalSelector = '[data-offplan-element=modal]';
+  const modalSelector = '[data-dialog-id=offplan-form]';
   const targetInputSelector = '[data-offplan-element=input]';
   const offplanListSelector = '[data-offplan-element=list]';
   const offplanModalTriggerSelector = '[data-offplan-element=modal-trigger]';
@@ -13,7 +13,7 @@ const init = () => {
   /**
    * All Element Variables
    */
-  const modal = document.querySelector<HTMLElement>(modalSelector);
+  const modal = document.querySelector<CustomDialogElement>(modalSelector);
 
   if (modal === null) {
     console.debug(`Offplan Modal not found. Selector: ${modalSelector}`);
@@ -33,11 +33,6 @@ const init = () => {
     console.debug(`Offplan List not found. Selector: ${offplanListSelector}`);
     return;
   }
-
-  const openOffplanModal = () => {
-    modal.style.opacity = '1';
-    modal.style.display = 'block';
-  };
 
   offplanList.addEventListener('click', (event) => {
     const selectedListItem = (event.target as HTMLElement)
@@ -63,9 +58,8 @@ const init = () => {
 
     const targetInputValue = `${nameValue}, ${locationValue}`;
 
-    openOffplanModal();
-
     targetInput.value = targetInputValue;
+    targetInput.focus();
   });
 };
 
