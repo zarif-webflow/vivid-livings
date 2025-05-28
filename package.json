@@ -1,5 +1,5 @@
 {
-  "name": "airdxb",
+  "name": "vivid-living",
   "private": true,
   "version": "0.0.0",
   "scripts": {
@@ -16,12 +16,10 @@
     "typescript": "^5.5.2"
   },
   "dependencies": {
-    "@floating-ui/dom": "^1.7.0",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.7",
     "@types/node": "^22.15.19",
-    "@zag-js/interact-outside": "^1.12.4",
     "embla-carousel": "^8.6.0",
     "es-toolkit": "^1.16.0",
     "gsap": "^3.13.0",

@@ -3,13 +3,12 @@ import {
   getAllFieldsValues,
   getAppliedFilters,
 } from '@/utils/finsweet-list-helpers';
-import { SELECTORS as ComboboxSelectors } from '@/utils/combobox';
 import { debounce } from 'es-toolkit';
 import { ListFilterCondition, ListInstance } from '@/types/finsweet-attributes-list';
 
 const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
   const SELECTORS = {
-    locationSearchInput: `[fs-list-instance=${fsListInstanceName}] input[fs-list-field=name-with-location]${ComboboxSelectors.comboboxInput}`,
+    locationSearchInput: `[fs-list-instance=${fsListInstanceName}] input[fs-list-field=name-with-location][data-input-combobox=input]`,
     searchButton: `[fs-list-instance=${fsListInstanceName}] form button[data-search-button=true]`,
   };
 

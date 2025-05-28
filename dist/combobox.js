@@ -1,1 +1,9 @@
-import{d as t,U as c}from"./chunks/combobox.js";const m=()=>{const o=Array.from(document.querySelectorAll(t.comboboxInput));for(const r of o)c(r)};m();
+import { S as SELECTORS, s as setupCombobox } from './chunks/combobox.js';
+
+const init = () => {
+  const comboboxInputs = Array.from(document.querySelectorAll(SELECTORS.comboboxInput));
+  for (const input of comboboxInputs) {
+    setupCombobox(input);
+  }
+};
+init();
