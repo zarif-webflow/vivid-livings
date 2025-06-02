@@ -1,4 +1,7 @@
+import type { EmblaCarouselType } from "embla-carousel";
+
 import { type EmblaNodeElement } from "@/types/embla";
+import { getHtmlElement, getMultipleHtmlElements } from "@/utils/get-html-element";
 
 type ChildAnimationElements = {
   details: HTMLElement | undefined | null;
@@ -7,19 +10,25 @@ type ChildAnimationElements = {
 type ChildAnimationElementsMap = Map<number, ChildAnimationElements>;
 
 const init = () => {
-  const featuredListingCarouslNodes = Array.from(
-    document.querySelectorAll<EmblaNodeElement>("[data-carousel-parent][data-featured-listing]")
-  );
+  const featuredListingCarouslNodes = getMultipleHtmlElements<EmblaNodeElement>({
+    selector: "[data-carousel-parent][data-featured-listing]",
+  });
+
+  if (!featuredListingCarouslNodes) return;
 
   for (const carouselNode of featuredListingCarouslNodes) {
+    let isInitialized = false;
     let carouselApi = carouselNode.emblaApi;
-    let slideCards = Array.from(carouselNode.querySelectorAll<HTMLElement>("[data-carousel-card]"));
+    let slideCards = getMultipleHtmlElements({
+      selector: "[data-carousel-card]",
+      parent: carouselNode,
+    });
     let currentIndex = carouselApi?.selectedScrollSnap();
 
     const childAnimationElementsMap: ChildAnimationElementsMap = new Map();
 
     const selectCurrentSlide = (currIndex: number) => {
-      if (slideCards === undefined) {
+      if (!slideCards) {
         console.debug("selectCurrentSlide was used before carousel was initialized");
         return;
       }
@@ -85,16 +94,14 @@ const init = () => {
       }
     };
 
-    carouselNode.addEventListener("embla:init", (event) => {
-      carouselApi = event.detail.embla;
-
-      slideCards = Array.from(carouselNode.querySelectorAll<HTMLElement>("[data-carousel-card]"));
+    const initializeSliderCards = (carouselApi: EmblaCarouselType, slideCards: HTMLElement[]) => {
+      if (isInitialized) return;
       currentIndex = carouselApi.selectedScrollSnap();
 
       for (let i = 0; i < slideCards.length; i++) {
         const slideCard = slideCards[i]!;
-        const details = slideCard.querySelector<HTMLElement>("[data-featured-details]");
-        const price = slideCard.querySelector<HTMLElement>("[data-featured-price]");
+        const details = getHtmlElement({ selector: "[data-featured-details]", parent: slideCard });
+        const price = getHtmlElement({ selector: "[data-featured-price]", parent: slideCard });
 
         const childAnimationElements: ChildAnimationElements = { details, price };
 
@@ -102,6 +109,26 @@ const init = () => {
       }
 
       selectCurrentSlide(currentIndex);
+      isInitialized = true;
+    };
+
+    if (carouselApi && slideCards) {
+      initializeSliderCards(carouselApi, slideCards);
+    }
+
+    carouselNode.addEventListener("embla:init", (event) => {
+      carouselApi = event.detail.embla;
+      slideCards = getMultipleHtmlElements({
+        selector: "[data-carousel-card]",
+        parent: carouselNode,
+      });
+
+      if (!slideCards) {
+        console.error("Carousel cards not found during embla:init");
+        return;
+      }
+
+      initializeSliderCards(carouselApi, slideCards);
     });
 
     carouselNode.addEventListener("embla:select", (event) => {
