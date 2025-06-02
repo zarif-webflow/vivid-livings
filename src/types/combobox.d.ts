@@ -50,14 +50,14 @@ declare global {
   }
 
   /**
-   * Combobox initialization event
+   * Combobox initialization event type alias
    */
-  interface ComboboxInitEvent extends CustomEvent<ComboboxInitEventDetail> {}
+  type ComboboxInitEvent = CustomEvent<ComboboxInitEventDetail>;
 
   /**
-   * Combobox selection event
+   * Combobox selection event type alias
    */
-  interface ComboboxSelectEvent extends CustomEvent<ComboboxSelectEventDetail> {}
+  type ComboboxSelectEvent = CustomEvent<ComboboxSelectEventDetail>;
 
   /**
    * Add event listener types for the custom combobox events
