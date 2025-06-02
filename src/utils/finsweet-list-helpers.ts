@@ -1,4 +1,4 @@
-import type { ListInstance, ListItem } from '@/types/finsweet-attributes-list';
+import type { ListInstance, ListItem } from "@/types/finsweet-attributes-list";
 
 export const getAppliedFilters = (listInstance: ListInstance) => {
   return listInstance.filters.value.groups?.[0]?.conditions ?? [];
@@ -25,16 +25,16 @@ export interface QueryFilter {
  */
 export function generateSearchQueryParams(filters: QueryFilter[], prefix: string): string {
   // only add an underscore when prefix is non-empty
-  const normalizedPrefix = prefix ? (prefix.endsWith('_') ? prefix : `${prefix}_`) : '';
+  const normalizedPrefix = prefix ? (prefix.endsWith("_") ? prefix : `${prefix}_`) : "";
 
   const parts = filters
     .filter(
-      ({ interacted, value }) => interacted === true && value != null && String(value).trim() !== ''
+      ({ interacted, value }) => interacted === true && value != null && String(value).trim() !== ""
     )
     .map(({ id, value }) => {
       const key = `${normalizedPrefix}${id}`;
       return `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`;
     });
 
-  return parts.length > 0 ? `?${parts.join('&')}` : '';
+  return parts.length > 0 ? `?${parts.join("&")}` : "";
 }

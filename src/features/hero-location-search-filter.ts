@@ -1,10 +1,11 @@
+import { debounce } from "es-toolkit";
+
+import type { ListFilterCondition, ListInstance } from "@/types/finsweet-attributes-list";
 import {
   generateSearchQueryParams,
   getAllFieldsValues,
   getAppliedFilters,
-} from '@/utils/finsweet-list-helpers';
-import { debounce } from 'es-toolkit';
-import { ListFilterCondition, ListInstance } from '@/types/finsweet-attributes-list';
+} from "@/utils/finsweet-list-helpers";
 
 const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
   const SELECTORS = {
@@ -17,21 +18,21 @@ const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
   );
 
   if (!locationSearchInput) {
-    console.error('Location search input not found', SELECTORS.locationSearchInput);
+    console.error("Location search input not found", SELECTORS.locationSearchInput);
     return;
   }
 
   const searchButton = document.querySelector<HTMLButtonElement>(SELECTORS.searchButton);
 
   if (!searchButton) {
-    console.error('Search button not found', SELECTORS.searchButton);
+    console.error("Search button not found", SELECTORS.searchButton);
     return;
   }
 
-  let searchParamsPrefix = locationSearchInput.getAttribute('data-search-params-prefix');
+  let searchParamsPrefix = locationSearchInput.getAttribute("data-search-params-prefix");
   if (!searchParamsPrefix) {
-    console.debug('Search params prefix not found, using default value');
-    searchParamsPrefix = '';
+    console.debug("Search params prefix not found, using default value");
+    searchParamsPrefix = "";
   }
 
   let comboboxApi = locationSearchInput.comboboxApi;
@@ -39,27 +40,27 @@ const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
   let listFilterConditions: ListFilterCondition[] = [];
   let listInstance: ListInstance | undefined = undefined;
 
-  locationSearchInput.addEventListener('combobox-init', (event) => {
+  locationSearchInput.addEventListener("combobox-init", (event) => {
     comboboxApi = event.detail.api;
   });
 
   window.FinsweetAttributes ||= [];
   window.FinsweetAttributes.push([
-    'list',
+    "list",
     (instances) => {
       for (const instance of instances) {
         if (instance.instance !== fsListInstanceName) continue;
 
         listInstance = instance;
 
-        instance.addHook('filter', (items) => {
+        instance.addHook("filter", (items) => {
           const allFieldValues = getAllFieldsValues(items);
 
           const newComboboxResults = [];
 
           for (const fieldValue of allFieldValues) {
-            const nameWithLocation = fieldValue['name-with-location']?.value;
-            if (typeof nameWithLocation !== 'string') continue;
+            const nameWithLocation = fieldValue["name-with-location"]?.value;
+            if (typeof nameWithLocation !== "string") continue;
             newComboboxResults.push(nameWithLocation);
           }
 
@@ -84,9 +85,9 @@ const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
     comboboxApi.openResultModal();
   }, 200);
 
-  locationSearchInput.addEventListener('input', () => {
+  locationSearchInput.addEventListener("input", () => {
     if (!comboboxApi) {
-      console.warn('Combobox API not found', locationSearchInput);
+      console.error("Combobox API not found", locationSearchInput);
       return;
     }
 
@@ -95,7 +96,7 @@ const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
     debouncedLocationInputCallback(value, comboboxApi);
   });
 
-  searchButton.addEventListener('click', () => {
+  searchButton.addEventListener("click", () => {
     const query = generateSearchQueryParams(listFilterConditions, searchParamsPrefix);
     // build full "/buy" URL on the current origin
     const baseUrl = window.location.origin;
@@ -104,14 +105,14 @@ const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
     window.location.href = fullUrl;
   });
 
-  locationSearchInput.addEventListener('combobox-select', (event) => {
+  locationSearchInput.addEventListener("combobox-select", (event) => {
     const selectedValue = event.detail.selectedValue;
 
     const filtersObjectConditions = listInstance?.filters.value.groups[0]?.conditions;
 
     if (filtersObjectConditions) {
       for (const condition of filtersObjectConditions) {
-        if (condition.fieldKey === 'name-with-location') {
+        if (condition.fieldKey === "name-with-location") {
           condition.value = selectedValue;
         }
       }
@@ -120,8 +121,8 @@ const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
 };
 
 const init = () => {
-  initLocationSearch('property-location-search', 'buy');
-  initLocationSearch('offplan-location-search', 'off-plan');
+  initLocationSearch("property-location-search", "buy");
+  initLocationSearch("offplan-location-search", "off-plan");
 };
 
 init();

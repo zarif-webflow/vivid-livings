@@ -1,4 +1,4 @@
-declare module 'toastify-js' {
+declare module "toastify-js" {
   export interface ToastifyOffset {
     x: number | string;
     y: number | string;

@@ -1,11 +1,11 @@
-import Toastify from 'toastify-js';
+import Toastify from "toastify-js";
 
 const toasterProps = {
   close: true,
-  gravity: 'bottom', // `top` or `bottom`
-  position: 'right', // `left`, `center` or `right`
+  gravity: "bottom", // `top` or `bottom`
+  position: "right", // `left`, `center` or `right`
   stopOnFocus: true, // Prevents dismissing of toast on hover
-  className: 'toast-style',
+  className: "toast-style",
 };
 
 export type ToastProps = {
@@ -23,10 +23,10 @@ export const getToaster = ({ text, duration, position, isTop, offsetX, offsetY }
     duration: duration || 3000,
     ...toasterProps,
     position,
-    gravity: isTop ? 'top' : 'bottom',
+    gravity: isTop ? "top" : "bottom",
     offset: {
-      x: offsetX || '1em', // horizontal axis - can be a number or a string indicating unity. eg: '2em'
-      y: offsetY || '1em', // vertical axis - can be a number or a string indicating unity. eg: '2em'
+      x: offsetX || "1em", // horizontal axis - can be a number or a string indicating unity. eg: '2em'
+      y: offsetY || "1em", // vertical axis - can be a number or a string indicating unity. eg: '2em'
     },
   });
   return toaster;

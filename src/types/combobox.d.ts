@@ -63,8 +63,8 @@ declare global {
    * Add event listener types for the custom combobox events
    */
   interface HTMLElementEventMap {
-    'combobox-init': ComboboxInitEvent;
-    'combobox-select': ComboboxSelectEvent;
+    "combobox-init": ComboboxInitEvent;
+    "combobox-select": ComboboxSelectEvent;
   }
 }
 

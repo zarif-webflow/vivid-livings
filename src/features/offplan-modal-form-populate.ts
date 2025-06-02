@@ -2,13 +2,13 @@ const init = () => {
   /**
    * All Element Selectors
    */
-  const modalSelector = '[data-dialog-id=offplan-form]';
-  const targetInputSelector = '[data-offplan-element=input]';
-  const offplanListSelector = '[data-offplan-element=list]';
-  const offplanModalTriggerSelector = '[data-dialog-trigger=offplan-form]';
-  const offplanListItemSelector = '[data-offplan-element=list-item]';
-  const nameSelector = '[data-offplan-element=name]';
-  const locationSelector = '[data-offplan-element=location]';
+  const modalSelector = "[data-dialog-id=offplan-form]";
+  const targetInputSelector = "[data-offplan-element=input]";
+  const offplanListSelector = "[data-offplan-element=list]";
+  // const offplanModalTriggerSelector = "[data-dialog-trigger=offplan-form]";
+  const offplanListItemSelector = "[data-offplan-element=list-item]";
+  const nameSelector = "[data-offplan-element=name]";
+  const locationSelector = "[data-offplan-element=location]";
 
   /**
    * All Element Variables
@@ -34,11 +34,11 @@ const init = () => {
     return;
   }
 
-  offplanList.addEventListener('click', (event) => {
+  offplanList.addEventListener("click", (event) => {
     const dialogApi = modal.dialogApi;
 
     if (dialogApi === undefined) {
-      console.error('Dialog API is not available for the modal.', modal);
+      console.error("Dialog API is not available for the modal.", modal);
       return;
     }
 

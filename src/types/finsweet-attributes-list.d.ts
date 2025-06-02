@@ -6,13 +6,13 @@
  * The hook names in the list lifecycle.
  */
 export type ListHookKey =
-  | 'start'
-  | 'filter'
-  | 'sort'
-  | 'pagination'
-  | 'beforeRender'
-  | 'render'
-  | 'afterRender';
+  | "start"
+  | "filter"
+  | "sort"
+  | "pagination"
+  | "beforeRender"
+  | "render"
+  | "afterRender";
 
 /**
  * A single rendered item in a list.
@@ -125,7 +125,7 @@ declare global {
        * Enqueue a callback for when 'list' attribute instances are loaded.
        * @param config A two-tuple ['list', callback]
        */
-      push(config: ['list', (instances: ListInstance[]) => void]): void;
+      push(config: ["list", (instances: ListInstance[]) => void]): void;
 
       // other push overloads (for different keys) can be declared here
       // push(...args: any[]): void;
