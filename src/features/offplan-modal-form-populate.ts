@@ -1,3 +1,5 @@
+import { getHtmlElement } from "@taj-wf/utils";
+
 const init = () => {
   /**
    * All Element Selectors
@@ -13,21 +15,21 @@ const init = () => {
   /**
    * All Element Variables
    */
-  const modal = document.querySelector<CustomDialogElement>(modalSelector);
+  const modal = getHtmlElement<CustomDialogElement>({ selector: modalSelector });
 
   if (modal === null) {
     console.debug(`Offplan Modal not found. Selector: ${modalSelector}`);
     return;
   }
 
-  const targetInput = document.querySelector<HTMLInputElement>(targetInputSelector);
+  const targetInput = getHtmlElement<HTMLInputElement>({ selector: targetInputSelector });
 
   if (targetInput === null) {
     console.debug(`Offplan Modal Input not found. Selector: ${targetInputSelector}`);
     return;
   }
 
-  const offplanList = document.querySelector<HTMLElement>(offplanListSelector);
+  const offplanList = getHtmlElement<HTMLElement>({ selector: offplanListSelector });
 
   if (offplanList === null) {
     console.debug(`Offplan List not found. Selector: ${offplanListSelector}`);
@@ -48,13 +50,19 @@ const init = () => {
 
     if (!selectedListItem) return;
 
-    const nameElement = selectedListItem.querySelector<HTMLElement>(nameSelector);
+    const nameElement = getHtmlElement<HTMLElement>({
+      selector: nameSelector,
+      parent: selectedListItem,
+    });
     if (!nameElement) {
       console.debug(`Offplan List Item Name not found. Selector: ${nameSelector}`);
       return;
     }
 
-    const locationElement = selectedListItem.querySelector<HTMLElement>(locationSelector);
+    const locationElement = getHtmlElement<HTMLElement>({
+      selector: locationSelector,
+      parent: selectedListItem,
+    });
     if (!locationElement) {
       console.debug(`Offplan List Item Location not found. Selector: ${locationSelector}`);
       return;

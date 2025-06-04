@@ -11,6 +11,9 @@ importers:
       '@finsweet/ts-utils':
         specifier: ^0.40.0
         version: 0.40.0
+      '@taj-wf/utils':
+        specifier: ^1.1.1
+        version: 1.1.1
       embla-carousel:
         specifier: ^8.6.0
         version: 8.6.0
@@ -505,6 +508,10 @@ packages:
     resolution: {integrity: sha512-Jii3aBg+CEDpgnuDxEp/h7BimHcUTDlpEtce89xEumlJ5ef2hqepZ+PWp1DDpYC/VO9fmWVI1IlEaoI5fK9FXQ==}
     engines: {node: '>=18'}
     hasBin: true
+
+  '@taj-wf/utils@1.1.1':
+    resolution: {integrity: sha512-6tnvnoYnCQ/jYHvPv+drqP2GPiUCXKPE7mrbwQDGCChz3lqszEmcBji3so6cLXvH4/nfNWmPp/AxdVum+IFtYw==}
+    engines: {pnpm: '>=10'}
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
@@ -1875,6 +1882,11 @@ snapshots:
   '@playwright/test@1.50.1':
     dependencies:
       playwright: 1.50.1
+
+  '@taj-wf/utils@1.1.1':
+    dependencies:
+      '@finsweet/ts-utils': 0.40.0
+      gsap: 3.13.0
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 

@@ -1,3 +1,5 @@
+import { getHtmlElement, getMultipleHtmlElements } from "@taj-wf/utils";
+
 import { getToaster, type ToastProps } from "../utils/toast";
 
 const SELECTORS = {
@@ -8,7 +10,9 @@ const SELECTORS = {
 };
 
 const init = () => {
-  const propertyListElements = Array.from(document.querySelectorAll<HTMLElement>(SELECTORS.list));
+  const propertyListElements = getMultipleHtmlElements({ selector: SELECTORS.list });
+
+  if (!propertyListElements) return;
 
   for (const propertyListElement of propertyListElements) {
     propertyListElement.addEventListener("click", async (event: MouseEvent) => {
@@ -22,7 +26,10 @@ const init = () => {
         return;
       }
 
-      const linkElement = targetListItem.querySelector<HTMLAnchorElement>(SELECTORS.link);
+      const linkElement = getHtmlElement<HTMLAnchorElement>({
+        selector: SELECTORS.link,
+        parent: targetListItem,
+      });
       if (!linkElement) {
         console.error("No link element found in the list item", targetListItem);
         return;

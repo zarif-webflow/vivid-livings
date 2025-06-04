@@ -1,3 +1,4 @@
+import { getHtmlElement } from "@taj-wf/utils";
 import { debounce } from "es-toolkit";
 
 import type { ListFilterCondition, ListInstance } from "@/types/finsweet-attributes-list";
@@ -13,16 +14,18 @@ const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
     searchButton: `[fs-list-instance=${fsListInstanceName}] form button[data-search-button=true]`,
   };
 
-  const locationSearchInput = document.querySelector<HTMLComboboxInputElement>(
-    SELECTORS.locationSearchInput
-  );
+  const locationSearchInput = getHtmlElement<HTMLComboboxInputElement>({
+    selector: SELECTORS.locationSearchInput,
+  });
 
   if (!locationSearchInput) {
     console.error("Location search input not found", SELECTORS.locationSearchInput);
     return;
   }
 
-  const searchButton = document.querySelector<HTMLButtonElement>(SELECTORS.searchButton);
+  const searchButton = getHtmlElement<HTMLButtonElement>({
+    selector: SELECTORS.searchButton,
+  });
 
   if (!searchButton) {
     console.error("Search button not found", SELECTORS.searchButton);

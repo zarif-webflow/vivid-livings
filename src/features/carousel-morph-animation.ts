@@ -1,7 +1,7 @@
+import { getGsap, getHtmlElement, getMultipleHtmlElements } from "@taj-wf/utils";
 import type { EmblaCarouselType } from "embla-carousel";
 
 import { type EmblaNodeElement } from "@/types/embla";
-import { getHtmlElement, getMultipleHtmlElements } from "@/utils/get-html-element";
 
 type ChildAnimationElements = {
   details: HTMLElement | undefined | null;
@@ -10,6 +10,10 @@ type ChildAnimationElements = {
 type ChildAnimationElementsMap = Map<number, ChildAnimationElements>;
 
 const init = () => {
+  const [gsap] = getGsap(undefined, "error");
+
+  if (!gsap) return;
+
   const featuredListingCarouslNodes = getMultipleHtmlElements<EmblaNodeElement>({
     selector: "[data-carousel-parent][data-featured-listing]",
   });

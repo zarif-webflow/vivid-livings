@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@finsweet/ts-utils": "^0.40.0",
+    "@taj-wf/utils": "^1.1.1",
     "embla-carousel": "^8.6.0",
     "es-toolkit": "^1.38.0",
     "gsap": "^3.13.0",
