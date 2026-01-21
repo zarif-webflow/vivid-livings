@@ -8,12 +8,54 @@ import {
   getAppliedFilters,
 } from "@/utils/finsweet-list-helpers";
 
-const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
-  const SELECTORS = {
-    locationSearchInput: `[fs-list-instance=${fsListInstanceName}] input[fs-list-field=name-with-location][data-input-combobox=input]`,
-    searchButton: `[fs-list-instance=${fsListInstanceName}] form button[data-search-button=true]`,
-  };
+const fsListInstanceNames = {
+  buy: "property-buy-search",
+  rent: "property-rent-search",
+  offplan: "offplan-search",
+};
 
+const fsListFieldNames = {
+  buy: "location-text",
+  rent: "location-text",
+  offplan: "name-with-location",
+};
+
+const configs = {
+  buy: {
+    pageSlug: "buy",
+    fsListInstanceName: fsListInstanceNames.buy,
+    selectors: {
+      locationSearchInput: `[fs-list-instance=${fsListInstanceNames.buy}] input[fs-list-field=${fsListFieldNames.buy}][data-input-combobox=input]`,
+      searchButton: `[fs-list-instance=${fsListInstanceNames.buy}] form button[data-search-button=true]`,
+    },
+    fieldName: fsListFieldNames.buy,
+  },
+  rent: {
+    pageSlug: "rent",
+    fsListInstanceName: fsListInstanceNames.rent,
+    selectors: {
+      locationSearchInput: `[fs-list-instance=${fsListInstanceNames.rent}] input[fs-list-field=${fsListFieldNames.rent}][data-input-combobox=input]`,
+      searchButton: `[fs-list-instance=${fsListInstanceNames.rent}] form button[data-search-button=true]`,
+    },
+    fieldName: fsListFieldNames.rent,
+  },
+  offplan: {
+    pageSlug: "off-plan",
+    fsListInstanceName: fsListInstanceNames.offplan,
+    selectors: {
+      locationSearchInput: `[fs-list-instance=${fsListInstanceNames.offplan}] input[fs-list-field=${fsListFieldNames.offplan}][data-input-combobox=input]`,
+      searchButton: `[fs-list-instance=${fsListInstanceNames.offplan}] form button[data-search-button=true]`,
+    },
+    fieldName: fsListFieldNames.offplan,
+  },
+};
+
+const initLocationSearch = ({
+  fsListInstanceName,
+  pageSlug,
+  selectors: SELECTORS,
+  fieldName,
+}: (typeof configs)[keyof typeof configs]) => {
   const locationSearchInput = getHtmlElement<HTMLComboboxInputElement>({
     selector: SELECTORS.locationSearchInput,
   });
@@ -59,15 +101,15 @@ const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
         instance.addHook("filter", (items) => {
           const allFieldValues = getAllFieldsValues(items);
 
-          const newComboboxResults = [];
+          const newComboboxResults = new Set<string>();
 
           for (const fieldValue of allFieldValues) {
-            const nameWithLocation = fieldValue["name-with-location"]?.value;
+            const nameWithLocation = fieldValue[fieldName]?.value;
             if (typeof nameWithLocation !== "string") continue;
-            newComboboxResults.push(nameWithLocation);
+            newComboboxResults.add(nameWithLocation);
           }
 
-          comboboxResults = newComboboxResults;
+          comboboxResults = Array.from(newComboboxResults);
 
           const appliedFilters = getAppliedFilters(instance);
           listFilterConditions = appliedFilters;
@@ -101,10 +143,8 @@ const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
 
   searchButton.addEventListener("click", () => {
     const query = generateSearchQueryParams(listFilterConditions, searchParamsPrefix);
-    // build full "/buy" URL on the current origin
     const baseUrl = window.location.origin;
     const fullUrl = `${baseUrl}/${pageSlug}${query}`;
-    // navigate to the new URL
     window.location.href = fullUrl;
   });
 
@@ -115,7 +155,7 @@ const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
 
     if (filtersObjectConditions) {
       for (const condition of filtersObjectConditions) {
-        if (condition.fieldKey === "name-with-location") {
+        if (condition.fieldKey === fieldName) {
           condition.value = selectedValue;
         }
       }
@@ -124,8 +164,9 @@ const initLocationSearch = (fsListInstanceName: string, pageSlug: string) => {
 };
 
 const init = () => {
-  initLocationSearch("property-location-search", "buy");
-  initLocationSearch("offplan-location-search", "off-plan");
+  initLocationSearch(configs.buy);
+  initLocationSearch(configs.rent);
+  initLocationSearch(configs.offplan);
 };
 
 init();
