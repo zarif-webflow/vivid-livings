@@ -7,4 +7,5 @@ export const ENTRY_POINTS = [
   "src/features/offplan-modal-form-populate.ts",
   "src/features/hero-location-search-filter.ts",
   "src/features/property-url-copy.ts",
+  "src/features/fix-fs-rangeslider.ts",
 ];

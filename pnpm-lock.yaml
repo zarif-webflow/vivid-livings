@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@data-slot/tabs':
+        specifier: ^0.2.7
+        version: 0.2.7
       '@finsweet/ts-utils':
         specifier: ^0.40.0
         version: 0.40.0
@@ -77,6 +80,9 @@ importers:
         version: 8.23.0(eslint@9.19.0(jiti@2.4.2))(typescript@5.7.3)
 
 packages:
+
+  '@data-slot/tabs@0.2.7':
+    resolution: {integrity: sha512-fLhaIj/Z/JeId1YoC/vjDfhORrSa4E9e3nZWPhks2ZqBW5RT59K9mgLKWcL1O5Vw2a6JxT5I+/6i9PmsDHAARA==}
 
   '@esbuild/aix-ppc64@0.24.2':
     resolution: {integrity: sha512-thpVCb/rhxE/BnMLQ7GReQLLN8q9qbHmI55F4489/ByVg2aQaQ6kbcLb6FHkocZzQhxc4gx0sCk0tJkKBFzDhA==}
@@ -1553,6 +1559,8 @@ packages:
     engines: {node: '>=18'}
 
 snapshots:
+
+  '@data-slot/tabs@0.2.7': {}
 
   '@esbuild/aix-ppc64@0.24.2':
     optional: true

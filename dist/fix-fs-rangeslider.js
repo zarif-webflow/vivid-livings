@@ -1,0 +1,1 @@
+var a=()=>{let e=!1,r=async()=>{if(e)return;e=!0;let t=window.FinsweetAttributes?.modules;if(!t){e=!1;return}let s=t.rangeslider;if(!s){e=!1;return}let n=s.restart;if(!n){e=!1;return}await n(),e=!1};document.querySelectorAll("[restart-range-slider]").forEach(t=>{t.addEventListener("click",async()=>{await r(),await r()})})};a();
