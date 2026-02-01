@@ -85,13 +85,8 @@ const initSearchFilter = ({
       for (const instance of instances) {
         if (instance.instance !== fsListInstanceName) continue;
 
-        // listInstance = instance;
-
-        instance.addHook("filter", (items) => {
-          const appliedFilters = getAppliedFilters(instance);
-          listFilterConditions = appliedFilters;
-          return items;
-        });
+        const appliedFilters = getAppliedFilters(instance);
+        listFilterConditions = appliedFilters;
       }
     },
   ]);
@@ -100,10 +95,12 @@ const initSearchFilter = ({
     let query = generateSearchQueryParams(listFilterConditions, searchParamsPrefix);
     const locationValue = locationSearchInput.value.trim();
 
+    const finalSearchParamsPrefix = searchParamsPrefix ? searchParamsPrefix + "_" : "";
+
     if (locationValue) {
       query +=
         (query ? "&" : "?") +
-        `${encodeURIComponent(`${searchParamsPrefix}_${fieldName}_equal`)}=${encodeURIComponent(locationValue)}`;
+        `${encodeURIComponent(`${finalSearchParamsPrefix}${fieldName}_equal`)}=${encodeURIComponent(locationValue)}`;
     }
 
     const baseUrl = window.location.origin;
