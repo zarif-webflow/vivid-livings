@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/features/places-api.ts"],
+  "sourcesContent": ["const initWorkflow = () => {\r\n  window.FinsweetAttributes ||= [];\r\n  window.FinsweetAttributes.push([\r\n    \"list\",\r\n    (listInstances) => {\r\n      for (const listInstance of listInstances) {\r\n        listInstance.addHook(\"start\", () => {\r\n          listInstance.items.value = listInstance.items.value.slice(0, 5);\r\n        });\r\n      }\r\n      // Your code goes here.\r\n    },\r\n  ]);\r\n};\r\n\r\ninitWorkflow();\r\n"],
+  "mappings": ";;;;;AAAA;AAAA,IAAM,eAAe,MAAM;AACzB,SAAO,uBAAuB,CAAC;AAC/B,SAAO,mBAAmB,KAAK;AAAA,IAC7B;AAAA,IACA,CAAC,kBAAkB;AACjB,iBAAW,gBAAgB,eAAe;AACxC,qBAAa,QAAQ,SAAS,MAAM;AAClC,uBAAa,MAAM,QAAQ,aAAa,MAAM,MAAM,MAAM,GAAG,CAAC;AAAA,QAChE,CAAC;AAAA,MACH;AAAA,IAEF;AAAA,EACF,CAAC;AACH;AAEA,aAAa;",
+  "names": []
+}
