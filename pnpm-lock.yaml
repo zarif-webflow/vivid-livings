@@ -14,15 +14,21 @@ importers:
       '@finsweet/ts-utils':
         specifier: ^0.40.0
         version: 0.40.0
+      '@googlemaps/js-api-loader':
+        specifier: ^1.16.10
+        version: 1.16.10
       '@taj-wf/utils':
-        specifier: ^1.1.1
-        version: 1.1.1
+        specifier: ^1.3.0
+        version: 1.3.0
       embla-carousel:
         specifier: ^8.6.0
         version: 8.6.0
       es-toolkit:
         specifier: ^1.38.0
         version: 1.38.0
+      fuse.js:
+        specifier: ^7.1.0
+        version: 7.1.0
       gsap:
         specifier: ^3.13.0
         version: 3.13.0
@@ -42,6 +48,9 @@ importers:
       '@playwright/test':
         specifier: ^1.50.1
         version: 1.50.1
+      '@types/google.maps':
+        specifier: ^3.58.1
+        version: 3.58.1
       cross-env:
         specifier: ^7.0.3
         version: 7.0.3
@@ -288,6 +297,9 @@ packages:
     peerDependencies:
       typescript: ^5.0.0
 
+  '@googlemaps/js-api-loader@1.16.10':
+    resolution: {integrity: sha512-c2erv2k7P2ilYzMmtYcMgAR21AULosQuUHJbStnrvRk2dG93k5cqptDrh9A8p+ZNlyhiqEOgHW7N9PAizdUM7Q==}
+
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
     engines: {node: '>=18.18.0'}
@@ -515,8 +527,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@taj-wf/utils@1.1.1':
-    resolution: {integrity: sha512-6tnvnoYnCQ/jYHvPv+drqP2GPiUCXKPE7mrbwQDGCChz3lqszEmcBji3so6cLXvH4/nfNWmPp/AxdVum+IFtYw==}
+  '@taj-wf/utils@1.3.0':
+    resolution: {integrity: sha512-jvPnLRMSqqF8sKBbNZeS7NTKK77pYuA1OPh+IUsBxF6KAM9a5aSWmXaUqN6t3rBGIZ8kvkckfMhkOXTk90wI4Q==}
     engines: {pnpm: '>=10'}
 
   '@tootallnate/quickjs-emscripten@0.23.0':
@@ -524,6 +536,9 @@ packages:
 
   '@types/estree@1.0.6':
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
+
+  '@types/google.maps@3.58.1':
+    resolution: {integrity: sha512-X9QTSvGJ0nCfMzYOnaVs/k6/4L+7F5uCS+4iUmkLEls6J9S/Phv+m/i3mDeyc49ZBgwab3EFO1HEoBY7k98EGQ==}
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
@@ -933,6 +948,10 @@ packages:
     resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+
+  fuse.js@7.1.0:
+    resolution: {integrity: sha512-trLf4SzuuUxfusZADLINj+dE8clK1frKdmqiJNb1Es75fmI5oY6X2mxLVUciLLjxqw/xr72Dhy+lER6dGd02FQ==}
+    engines: {node: '>=10'}
 
   get-east-asian-width@1.3.0:
     resolution: {integrity: sha512-vpeMIQKxczTD/0s2CdEWHcb0eeJe6TFjxb+J5xgX7hScxqrGuyjmv4c1D4A/gelKfyox0gJJwIHF+fLjeaM8kQ==}
@@ -1696,6 +1715,8 @@ snapshots:
     dependencies:
       typescript: 5.7.3
 
+  '@googlemaps/js-api-loader@1.16.10': {}
+
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.6':
@@ -1891,7 +1912,7 @@ snapshots:
     dependencies:
       playwright: 1.50.1
 
-  '@taj-wf/utils@1.1.1':
+  '@taj-wf/utils@1.3.0':
     dependencies:
       '@finsweet/ts-utils': 0.40.0
       gsap: 3.13.0
@@ -1899,6 +1920,8 @@ snapshots:
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
   '@types/estree@1.0.6': {}
+
+  '@types/google.maps@3.58.1': {}
 
   '@types/json-schema@7.0.15': {}
 
@@ -2349,6 +2372,8 @@ snapshots:
 
   fsevents@2.3.2:
     optional: true
+
+  fuse.js@7.1.0: {}
 
   get-east-asian-width@1.3.0: {}
 
