@@ -34,11 +34,20 @@ const getGooglePlacesSearch = async () => {
         includedRegionCodes: ["ae"],
       };
 
-      const suggestions = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+      const response = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+
+      if (!response) {
+        console.error("No response from AutocompleteSuggestion");
+        return [];
+      }
+
+      if (response.suggestions.length === 0) {
+        return [];
+      }
 
       const results: string[] = [];
 
-      for (const suggestion of suggestions.suggestions) {
+      for (const suggestion of response.suggestions) {
         const mainLocationResult = suggestion?.placePrediction?.mainText?.text;
         if (!mainLocationResult) continue;
 
