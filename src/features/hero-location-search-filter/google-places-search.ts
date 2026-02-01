@@ -1,6 +1,5 @@
 import { Loader } from "@googlemaps/js-api-loader";
 import { getActiveScript } from "@taj-wf/utils";
-import { debounce } from "es-toolkit";
 
 const scriptElement = getActiveScript(import.meta.url);
 
@@ -28,7 +27,7 @@ const formatResult = (location: string) => {
 const getGooglePlacesSearch = async () => {
   const { AutocompleteSuggestion } = await loader.importLibrary("places");
 
-  const fetchAddresses = async (query: string, callback: (result: string[]) => void) => {
+  const fetchLocations = async (query: string): Promise<string[]> => {
     try {
       const request: google.maps.places.AutocompleteRequest = {
         input: query,
@@ -48,14 +47,14 @@ const getGooglePlacesSearch = async () => {
         results.push(formattedResult);
       }
 
-      callback(results);
+      return results;
     } catch (error) {
       console.error("Something went wrong with places api:", error);
-      // Return empty array on error and cache it to avoid repeated failed requests
-      const emptyResult: string[] = [];
-      callback(emptyResult);
+      return [];
     }
   };
 
-  return { fetchAddresses: fetchAddresses };
+  return { fetchLocations };
 };
+
+export { getGooglePlacesSearch };
