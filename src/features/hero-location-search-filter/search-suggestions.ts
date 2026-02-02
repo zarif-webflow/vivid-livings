@@ -42,10 +42,16 @@ const initSearchSuggestions = () => {
       comboboxApi = event.detail.api;
     });
 
+    const resultsCache = new Map<string, string[]>();
+
     const getSearchResults = async (query: string): Promise<string[]> => {
       const trimmedQuery = query.trim();
 
       if (trimmedQuery === "") return [];
+
+      if (resultsCache.has(trimmedQuery)) {
+        return resultsCache.get(trimmedQuery)!;
+      }
 
       const resultsSet = cmsFuzzySearch(trimmedQuery);
 
@@ -65,6 +71,8 @@ const initSearchSuggestions = () => {
       }
 
       const results = Array.from(resultsSet);
+
+      resultsCache.set(trimmedQuery, results);
 
       return results;
     };
