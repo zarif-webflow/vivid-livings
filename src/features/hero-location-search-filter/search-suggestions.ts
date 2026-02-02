@@ -1,4 +1,5 @@
 import { getHtmlElement } from "@taj-wf/utils";
+import { debounce } from "es-toolkit";
 
 import { getFuzzySearchFunction } from "./helpers/fuzzy-search";
 import { getPropsCmsSearchResults } from "./helpers/get-cms-search-results";
@@ -85,11 +86,6 @@ const initSearchSuggestions = () => {
         return;
       }
 
-      // Cancel any pending request
-      if (currentAbortController) {
-        currentAbortController.abort();
-      }
-
       // Create new abort controller for this request
       currentAbortController = new AbortController();
       const thisRequestController = currentAbortController;
@@ -110,7 +106,14 @@ const initSearchSuggestions = () => {
       comboboxApi.openResultModal();
     };
 
-    comboboxInput.addEventListener("input", handleInput);
+    const debouncedHandleInput = debounce(handleInput, 200);
+
+    comboboxInput.addEventListener("input", () => {
+      if (currentAbortController) {
+        currentAbortController.abort();
+      }
+      debouncedHandleInput();
+    });
   };
 
   const initBuySearch = () => {
