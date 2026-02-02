@@ -2,9 +2,31 @@ import { getHtmlElement } from "@taj-wf/utils";
 
 import { getFuzzySearchFunction } from "./helpers/fuzzy-search";
 import { getPropsCmsSearchResults } from "./helpers/get-cms-search-results";
+import {
+  type GooglePlacesSearchFunc,
+  initGooglePlacesSearch,
+} from "./helpers/google-places-search";
 import { searchFilterConfigs } from "./search-filter";
 
 const initSearchSuggestions = () => {
+  let googlePlacesSearch: GooglePlacesSearchFunc | null = null;
+
+  const setupGooglePlacesSearch = () => {
+    try {
+      const { getGooglePlacesSearch } = initGooglePlacesSearch();
+      getGooglePlacesSearch().then((res) => {
+        googlePlacesSearch = res.search;
+      });
+    } catch (err) {
+      const error = err as Error;
+      console.error("Error initializing Google Places Search:", error.message);
+      googlePlacesSearch = null;
+      return;
+    }
+  };
+
+  setupGooglePlacesSearch();
+
   const initSearchSuggestion = (comboboxInputSelector: string, allStaticResults: string[]) => {
     const comboboxInput = getHtmlElement<HTMLComboboxInputElement>({
       selector: comboboxInputSelector,
@@ -25,9 +47,26 @@ const initSearchSuggestions = () => {
 
       if (trimmedQuery === "") return [];
 
-      const cmsResults = cmsFuzzySearch(trimmedQuery);
+      const resultsSet = cmsFuzzySearch(trimmedQuery);
 
-      return cmsResults;
+      if (googlePlacesSearch !== null) {
+        try {
+          const googleResults = await googlePlacesSearch(trimmedQuery);
+
+          if (googleResults && googleResults.length > 0) {
+            for (const result of googleResults) {
+              resultsSet.add(result);
+            }
+          }
+        } catch (err) {
+          const error = err as Error;
+          console.error("Error fetching Google Places Search results:", error.message);
+        }
+      }
+
+      const results = Array.from(resultsSet);
+
+      return results;
     };
 
     const handleInput = async () => {
