@@ -33,13 +33,8 @@ export const initGooglePlacesSearch = () => {
         const request: google.maps.places.AutocompleteRequest = {
           input: query,
           includedRegionCodes: ["ae"],
-          includedPrimaryTypes: [
-            "natural_feature",
-            "sublocality",
-            "apartment_complex",
-            "neighborhood",
-            "condominium_complex",
-          ],
+          language: "en",
+          includedPrimaryTypes: ["natural_feature", "establishment", "apartment_building"],
         };
 
         const response = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
