@@ -15,7 +15,7 @@ const fsListFieldNames = {
   offplan: "name-with-location",
 };
 
-const configs = {
+export const searchFilterConfigs = {
   buy: {
     pageSlug: "buy",
     fsListInstanceName: fsListInstanceNames.buy,
@@ -50,7 +50,7 @@ const initSearchFilter = ({
   pageSlug,
   selectors: SELECTORS,
   fieldName,
-}: (typeof configs)[keyof typeof configs]) => {
+}: (typeof searchFilterConfigs)[keyof typeof searchFilterConfigs]) => {
   const locationSearchInput = getHtmlElement<HTMLComboboxInputElement>({
     selector: SELECTORS.locationSearchInput,
   });
@@ -112,9 +112,9 @@ const initSearchFilter = ({
 };
 
 const init = () => {
-  initSearchFilter(configs.buy);
-  initSearchFilter(configs.rent);
-  initSearchFilter(configs.offplan);
+  initSearchFilter(searchFilterConfigs.buy);
+  initSearchFilter(searchFilterConfigs.rent);
+  initSearchFilter(searchFilterConfigs.offplan);
 };
 
 init();
