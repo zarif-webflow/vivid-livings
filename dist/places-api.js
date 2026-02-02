@@ -1,1 +1,100 @@
-import{a as m}from"./chunks/chunk-UOBIIBPT.js";import{a as g}from"./chunks/chunk-EHF5TEVY.js";import{c as p,e as u}from"./chunks/chunk-ISN7ZXVF.js";var h=u(import.meta.url);if(!h)throw new Error("Search Address script element was not found!");var f=h.getAttribute("data-places-key");if(!f)throw new Error("Places API key was not found in the script element! Please set data-places-key attribute in the script.");var y=new m({apiKey:f,version:"weekly"}),E=o=>o.replaceAll(" - ",", ").replaceAll(" | ",", "),x=async()=>{let{AutocompleteSuggestion:o}=await y.importLibrary("places"),e=new Map;return{fetchAddresses:g(async(n,r)=>{let l=e.get(n);if(l!==void 0){r(l);return}try{let c={input:n,includedRegionCodes:["ae"],includedPrimaryTypes:["lodging","sublocality","apartment_complex","neighborhood","condominium_complex"]},s=await o.fetchAutocompleteSuggestions(c);console.clear(),s.suggestions.forEach(t=>{let d=t?.placePrediction.mainText?.text;if(!d)throw new Error("No main text found for suggestion");let w=E(d);console.log("-------"),console.log(w),console.log(t?.placePrediction?.types),console.log("--------------")});let a=s.suggestions.filter(t=>t.placePrediction!=null).map(t=>t.placePrediction.text.text);e.set(n,a),r(a)}catch(c){console.error("Something went wrong with places api:",c);let s=[];e.set(n,s),r(s)}},100)}},L=x(),P=async()=>{L.then(({fetchAddresses:o})=>{console.log("Autocompletetions Loaded Succesfully!");let e=p({selector:"[data-search-input]"});e&&e.addEventListener("input",()=>{let i=e.value;o(i,A=>{})})})};P();export{L as fetchAddresses};
+import {
+  Loader
+} from "./chunks/chunk-X6GY2OOG.js";
+import {
+  debounce
+} from "./chunks/chunk-IX3EIQDC.js";
+import {
+  getActiveScript,
+  getHtmlElement
+} from "./chunks/chunk-4S3UMDLU.js";
+import {
+  init_live_reload
+} from "./chunks/chunk-VVUAQP7I.js";
+
+// src/features/places-api.ts
+init_live_reload();
+var scriptElement = getActiveScript(import.meta.url);
+if (!scriptElement) {
+  throw new Error("Search Address script element was not found!");
+}
+var placesApiKey = scriptElement.getAttribute("data-places-key");
+if (!placesApiKey) {
+  throw new Error(
+    "Places API key was not found in the script element! Please set data-places-key attribute in the script."
+  );
+}
+var loader = new Loader({
+  apiKey: placesApiKey,
+  version: "weekly"
+});
+var processLocationString = (location) => {
+  return location.replaceAll(" - ", ", ").replaceAll(" | ", ", ");
+};
+var getAutocompleteSuggestionsFunc = async () => {
+  const { AutocompleteSuggestion } = await loader.importLibrary("places");
+  const addressQueryCache = /* @__PURE__ */ new Map();
+  const fetchAddresses2 = async (query, callback) => {
+    const cachedResult = addressQueryCache.get(query);
+    if (cachedResult !== void 0) {
+      callback(cachedResult);
+      return;
+    }
+    try {
+      const request = {
+        input: query,
+        includedRegionCodes: ["ae"],
+        includedPrimaryTypes: [
+          "lodging",
+          "sublocality",
+          "apartment_complex",
+          "neighborhood",
+          // "establishment",
+          "condominium_complex"
+        ]
+      };
+      const suggestions = await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+      console.clear();
+      suggestions.suggestions.forEach((suggestion) => {
+        const mainLocationResult = suggestion?.placePrediction.mainText?.text;
+        if (!mainLocationResult) {
+          throw new Error("No main text found for suggestion");
+          return;
+        }
+        const processedLocation = processLocationString(mainLocationResult);
+        console.log("-------");
+        console.log(processedLocation);
+        console.log(suggestion?.placePrediction?.types);
+        console.log("--------------");
+      });
+      const result = suggestions.suggestions.filter((suggestion) => suggestion.placePrediction != null).map((suggestion) => suggestion.placePrediction.text.text);
+      addressQueryCache.set(query, result);
+      callback(result);
+    } catch (error) {
+      console.error("Something went wrong with places api:", error);
+      const emptyResult = [];
+      addressQueryCache.set(query, emptyResult);
+      callback(emptyResult);
+    }
+  };
+  const debouncedFetchAddresses = debounce(fetchAddresses2, 100);
+  return { fetchAddresses: debouncedFetchAddresses };
+};
+var fetchAddresses = getAutocompleteSuggestionsFunc();
+var init = async () => {
+  fetchAddresses.then(({ fetchAddresses: fetchAddresses2 }) => {
+    console.log("Autocompletetions Loaded Succesfully!");
+    const inputEl = getHtmlElement({ selector: "[data-search-input]" });
+    if (!inputEl) return;
+    inputEl.addEventListener("input", () => {
+      const value = inputEl.value;
+      fetchAddresses2(value, (results) => {
+      });
+    });
+  });
+};
+init();
+export {
+  fetchAddresses
+};
+//# sourceMappingURL=places-api.js.map

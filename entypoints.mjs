@@ -8,6 +8,6 @@ export const ENTRY_POINTS = [
   "src/features/hero-location-search-filter.ts",
   "src/features/property-url-copy.ts",
   "src/features/fix-fs-rangeslider.ts",
-  "src/features/places-api.ts",
   "src/features/hero-location-search-filter/search-filter.ts",
+  "src/features/hero-location-search-filter/search-suggestions.ts",
 ];
