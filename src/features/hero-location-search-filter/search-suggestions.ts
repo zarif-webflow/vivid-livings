@@ -20,31 +20,34 @@ const initSearchSuggestions = () => {
       comboboxApi = event.detail.api;
     });
 
-    comboboxInput.addEventListener("input", () => {
+    const getSearchResults = async (query: string): Promise<string[]> => {
+      const trimmedQuery = query.trim();
+
+      if (trimmedQuery === "") return [];
+
+      const cmsResults = cmsFuzzySearch(trimmedQuery);
+
+      return cmsResults;
+    };
+
+    const handleInput = async () => {
       if (!comboboxApi) {
         console.error("Combobox API not found on Combobox Input", comboboxInput);
         return;
       }
 
-      const inputValue = comboboxInput.value.trim();
+      const searchResults = await getSearchResults(comboboxInput.value);
 
-      if (inputValue === "") {
+      if (searchResults.length === 0) {
         comboboxApi.renderResults([]);
         comboboxApi.closeResultModal();
         return;
       }
-
-      const fuzzyResults = cmsFuzzySearch(inputValue);
-
-      if (fuzzyResults.length === 0) {
-        comboboxApi.renderResults([]);
-        comboboxApi.closeResultModal();
-        return;
-      }
-
-      comboboxApi.renderResults(fuzzyResults);
+      comboboxApi.renderResults(searchResults);
       comboboxApi.openResultModal();
-    });
+    };
+
+    comboboxInput.addEventListener("input", handleInput);
   };
 
   const initBuySearch = () => {
