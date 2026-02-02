@@ -10,7 +10,13 @@ export const getFuzzySearchFunction = (allResults: string[]) => {
   return {
     search: (query: string) => {
       const results = fuse.search(query);
-      return results.map((result) => result.item);
+      const resultsSet = new Set<string>();
+
+      for (const result of results) {
+        resultsSet.add(result.item);
+      }
+
+      return resultsSet;
     },
   };
 };
