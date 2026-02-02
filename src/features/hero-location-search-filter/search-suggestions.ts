@@ -77,13 +77,29 @@ const initSearchSuggestions = () => {
       return results;
     };
 
+    let currentAbortController: AbortController | null = null;
+
     const handleInput = async () => {
       if (!comboboxApi) {
         console.error("Combobox API not found on Combobox Input", comboboxInput);
         return;
       }
 
+      // Cancel any pending request
+      if (currentAbortController) {
+        currentAbortController.abort();
+      }
+
+      // Create new abort controller for this request
+      currentAbortController = new AbortController();
+      const thisRequestController = currentAbortController;
+
       const searchResults = await getSearchResults(comboboxInput.value);
+
+      // Check if this request was aborted
+      if (thisRequestController.signal.aborted) {
+        return;
+      }
 
       if (searchResults.length === 0) {
         comboboxApi.renderResults([]);
