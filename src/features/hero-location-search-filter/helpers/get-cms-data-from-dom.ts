@@ -1,9 +1,14 @@
-import { getMultipleHtmlElements } from "@taj-wf/utils";
+import { getHtmlElement, getMultipleHtmlElements } from "@taj-wf/utils";
 
 export const getPropsCmsDataFromDom = () => {
+  const cmsWrap = getHtmlElement({ selector: "[search-property-cms]", log: "error" });
+
+  if (!cmsWrap) return null;
+
   const propCmsItems = getMultipleHtmlElements({
     selector: "[search-property-item]",
     log: "error",
+    parent: cmsWrap,
   });
   if (!propCmsItems) return null;
 
@@ -25,11 +30,22 @@ export const getPropsCmsDataFromDom = () => {
     propNames.add(propName);
     propAreas.add(propArea);
   }
+
+  cmsWrap.remove();
+
   return { propNames, propAreas };
 };
 
 export const getOffplanCmsDataFromDom = () => {
-  const propCmsItems = getMultipleHtmlElements({ selector: "[search-offplan-item]", log: "error" });
+  const cmsWrap = getHtmlElement({ selector: "[offplan-property-cms]", log: "error" });
+
+  if (!cmsWrap) return null;
+
+  const propCmsItems = getMultipleHtmlElements({
+    selector: "[search-offplan-item]",
+    log: "error",
+    parent: cmsWrap,
+  });
   if (!propCmsItems) return null;
 
   const propNames = new Set<string>();
@@ -42,5 +58,8 @@ export const getOffplanCmsDataFromDom = () => {
     }
     propNames.add(name);
   }
+
+  cmsWrap.remove();
+
   return { propNames };
 };
