@@ -49,17 +49,23 @@ export const getOffplanCmsDataFromDom = () => {
   if (!propCmsItems) return null;
 
   const propNames = new Set<string>();
+  const propAreas = new Set<string>();
 
   for (const item of propCmsItems) {
     const name = item.getAttribute("offplan-name");
-    if (!name) {
-      console.error("Missing offplan-name attribute on offplan item:", item);
+    const area = item.getAttribute("offplan-area");
+    if (!name || !area) {
+      console.error("Missing offplan-name or offplan-area attribute on offplan item:", item);
       continue;
     }
-    propNames.add(name);
+
+    const propName = `${name}, ${area}`;
+
+    propNames.add(propName);
+    propAreas.add(area);
   }
 
   cmsWrap.remove();
 
-  return { propNames };
+  return { propNames, propAreas };
 };

@@ -13,5 +13,5 @@ export const getOffplanCmsSearchResults = () => {
 
   if (!cmsData) return null;
 
-  return [...cmsData.propNames];
+  return [...cmsData.propNames, ...cmsData.propAreas];
 };

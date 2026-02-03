@@ -2,7 +2,10 @@ import { getHtmlElement } from "@taj-wf/utils";
 import { debounce } from "es-toolkit";
 
 import { getFuzzySearchFunction } from "./helpers/fuzzy-search";
-import { getPropsCmsSearchResults } from "./helpers/get-cms-search-results";
+import {
+  getOffplanCmsSearchResults,
+  getPropsCmsSearchResults,
+} from "./helpers/get-cms-search-results";
 import {
   type GooglePlacesSearchFunc,
   initGooglePlacesSearch,
@@ -28,7 +31,7 @@ const initSearchSuggestions = () => {
 
   setupGooglePlacesSearch();
 
-  const initSearchSuggestion = (comboboxInputSelector: string, allStaticResults: string[]) => {
+  const initSearchSuggestion = (comboboxInputSelector: string, allStaticPropResults: string[]) => {
     const comboboxInput = getHtmlElement<HTMLComboboxInputElement>({
       selector: comboboxInputSelector,
       log: "error",
@@ -37,7 +40,7 @@ const initSearchSuggestions = () => {
 
     let comboboxApi = comboboxInput.comboboxApi;
 
-    const { search: cmsFuzzySearch } = getFuzzySearchFunction(allStaticResults);
+    const { search: cmsFuzzySearch } = getFuzzySearchFunction(allStaticPropResults);
 
     comboboxInput.addEventListener("combobox-init", (event) => {
       comboboxApi = event.detail.api;
@@ -116,18 +119,36 @@ const initSearchSuggestions = () => {
     });
   };
 
-  const initBuySearch = () => {
-    const allStaticResults = getPropsCmsSearchResults();
+  const initAllSearches = () => {
+    const allStaticPropResults = getPropsCmsSearchResults();
 
-    if (!allStaticResults || allStaticResults.length === 0) {
+    if (!allStaticPropResults || allStaticPropResults.length === 0) {
       console.error("No CMS search results found for initializing combobox");
       return;
     }
 
-    initSearchSuggestion(searchFilterConfigs.buy.selectors.locationSearchInput, allStaticResults);
+    initSearchSuggestion(
+      searchFilterConfigs.buy.selectors.locationSearchInput,
+      allStaticPropResults
+    );
+    initSearchSuggestion(
+      searchFilterConfigs.rent.selectors.locationSearchInput,
+      allStaticPropResults
+    );
+
+    const allStaticOffplanResults = getOffplanCmsSearchResults();
+
+    if (!allStaticOffplanResults || allStaticOffplanResults.length === 0) {
+      console.error("No Offplan CMS search results found for initializing combobox");
+      return;
+    }
+    initSearchSuggestion(searchFilterConfigs.offplan.selectors.locationSearchInput, [
+      ...allStaticOffplanResults,
+      ...allStaticPropResults,
+    ]);
   };
 
-  initBuySearch();
+  initAllSearches();
 };
 
 initSearchSuggestions();
